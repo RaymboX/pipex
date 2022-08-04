@@ -17,6 +17,7 @@ RM				= 	rm -rf
 VALG_LEAK		=	valgrind --leak-check=full
 UNAME_S		 	= 	$(shell uname -s)
 REL_PATH		=	$(shell pwd)
+LEAK_CMD		=	leaks --atExit --
 
 #DIRECTORIES--------------------------------------------------------------------
 
@@ -55,9 +56,9 @@ init:
 
 $(NAME):			$(OBJS) 
 ifeq ($(UNAME_S),Linux)
-						@gcc -g $(CFLAGS) libft/*c $(SRCS) -o $(NAME)
+					@gcc -g $(CFLAGS) libft/*c $(SRCS) -o $(NAME)
 else
-						$(CC) $(CFLAGS) $(LIBFT) -o $(NAME) $(OBJS)
+					@$(CC) $(CFLAGS) $(LIBFT) -o $(NAME) $(OBJS)
 endif
 					@echo "$G$(NAME) compiled$W"
 					
@@ -132,6 +133,9 @@ val1:
 					$(VALG_LEAK) ./pipex file1 "grep file" "grep 2" "grep a" file99
 					cat file99
 					$(RM) file99
+
+leak:
+					$(LEAK_CMD) ./pipex file1 "grep file" "grep 2" "grep a" file99
 
 lldb:
 					lldb ./pipex file1 "grep file" "grep 2" file99

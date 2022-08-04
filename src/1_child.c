@@ -6,7 +6,7 @@
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 12:29:25 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/03 10:47:21 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/04 15:27:27 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,44 +27,43 @@ int	fork_exec(t_vars *vars, char *args)
 		vars->fd_receiver = vars->fd_pipe[1];
 	}
 	vars->id = fork();
-	if (vars->id != 0)
-	{
-		wait(0);
-		close(vars->fd_pipe[1]);
-		close(vars->fd_receiver);
-		write(vars->fd_pipe_err[1], "0", 1);
-	}
-	else
+	if (vars->id == 0)
 	{
 		child_exec(vars, args);
 		return (1);
 	}
+	wait(0);
+	printf("not waiting anymore\n");
+	close(vars->fd_pipe[1]);
+	close(vars->fd_receiver);
+	write(vars->fd_pipe_err[1], "0", 1);
 	return (0);
 }
 
 void	child_exec(t_vars *vars, char *args)
 {
 	char	**exec_args;
-	char	*cmd;
+	char	*path;
 
 	exec_args = NULL;
-	cmd = NULL;
+	path = NULL;
 	//close(vars->fd_pipe[0]);
 	//close(vars->fd_pipe_err[0]);
 	exec_args = args_parcing(args, exec_args);
-	cmd = find_file(vars->cmd_path, exec_args[0]);
-	if (cmd)
+	path = find_file(vars->cmd_path, exec_args[0]);
+	printf("path=%s cmd=%s\n", path, exec_args[0]);
+	if (path)
 	{
 		dup2(vars->fd_giver, 0);
 		dup2(vars->fd_receiver, 1);
-		execve(cmd, exec_args, NULL);
+		execve(path, exec_args, NULL);
 	}
-	close(vars->fd_giver);
-	close(vars->fd_receiver);
-	free(cmd);
+	//close(vars->fd_giver);
+	//close(vars->fd_receiver);
+	free(path);
 	free_dbl_ptr((void **)exec_args);
 	write(vars->fd_pipe_err[1], "1", 1);
-	close(vars->fd_pipe_err[1]);
+	//close(vars->fd_pipe_err[1]);
 }
 
 char	*find_file(char **path, char *file)
@@ -73,6 +72,19 @@ char	*find_file(char **path, char *file)
 	char	*path_cmd;
 	char	*path_slash;
 
+	if (access(file, F_OK) == 0)
+	{
+		printf("cmd local accessible\n");
+		printf("index of / =%d\n", ft_strrchr_i(file, '/'));
+		if (ft_strrchr_i(file, '/') != -1)
+		{
+			//remove./ devant file 
+			file = 
+			return (file[ft_strrchr_i(file, '/') + 1]);
+		}
+		else
+			return (ft_strjoin("./", file));
+	}
 	i = -1;
 	while (path[++i])
 	{

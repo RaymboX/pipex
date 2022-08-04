@@ -6,7 +6,7 @@
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 12:27:59 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/03 12:52:49 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/04 14:41:48 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,15 @@ int	main(int argc, char **argv, char **envp)
 		return (error_message(&vars, argc, argv, fct_ret));
 	fct_ret = cmd_loop(&vars, argv);
 	free_dbl_ptr((void **)vars.cmd_path);
+	printf("ret fork:%d vars->id:%d\n", fct_ret, vars.id);
 	close_all(&vars);
+	printf("ret fork:%d vars->id:%d\n", fct_ret, vars.id);
 	if (fct_ret == CHILD_RUNAWAY)
+	{
+		printf("child exit\n");
 		return (0);
+	}
+	printf("ret fork:%d vars->id:%d\n", fct_ret, vars.id);
 	if (fct_ret != 0)
 		return (error_message(&vars, argc, argv, fct_ret));
 	return (0);
@@ -56,7 +62,7 @@ int	open_file(t_vars *vars, int argc, char **argv)
 	vars->fd_file_in = open(argv[1], O_RDWR, 00777);
 	if (vars->fd_file_in == -1)
 		return (OPEN_FILE1);
-	vars->fd_file_out = open(argv[argc - 1], O_RDWR | O_CREAT, 00777);
+	vars->fd_file_out = open(argv[argc - 1], O_RDWR | O_CREAT | O_TRUNC, 00777);
 	if (vars->fd_file_out == -1)
 	{
 		close(vars->fd_file_in);
@@ -92,6 +98,7 @@ int	cmd_loop(t_vars *vars, char **argv)
 		&& buf == '0')
 	{
 		fct_ret = fork_exec(vars, argv[vars->i_cmd + 2]);
+		printf("ret fork:%d vars->id:%d\n", fct_ret, vars->id);
 		if (vars->id != 0 && fct_ret == 0)
 			read(vars->fd_pipe_err[0], &buf, 1);
 	}
@@ -110,11 +117,13 @@ int	error_message(t_vars *vars, int argc, char **argv, int error)
 		printf("Error opening file %s\n", argv[1]);
 	if (error == OPEN_FILE2)
 		printf("Error opening file %s\n", argv[argc - 1]);
+	if (error == OPEN_FILE1 || error == OPEN_FILE2)
+		free_dbl_ptr((void **)vars->cmd_path);
 	if (error == EXECVE_FAIL)
 		printf("Error execve on cmd %s\n", argv[vars->i_cmd + 1]);
 	if (error == PIPE_ERR)
 		printf("Error creating pipe for error management");
 	if (error == PIPE_EXEC)
 		printf("Error creating pipe for cmd %s\n", argv[vars->i_cmd + 2]);
-	return (errno);
+	return (0);
 }
