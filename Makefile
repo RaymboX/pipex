@@ -28,7 +28,8 @@ LIBFT_DIR		= 	./libft
 #FILES--------------------------------------------------------------------------
 
 SRCS_FILES	 	= 	0_pipex.c \
-					1_child.c
+					1_child.c \
+					2_arg_parcing.c
 
 LIBFT_FILES		= 	libft.a
 
@@ -96,49 +97,6 @@ test2:
 					./pipex file1 "grep file" "grep 2" "grep a" file99
 					cat file99
 					$(RM) file99
-
-#PARCING TEST-------------------------------------------------------------------
-args_test:
-					./pipex
-					./pipex file1
-					./pipex file1 "grep a"
-					./pipex file1 "grep a" "grep b"
-
-empty_pipe:
-					./pipex file1 "grep z" "grep w" fileout
-					cat fileout
-					$(RM) fileout
-					
-file_not_exist:
-					./pipex nofile "grep a" "grep b" fileout
-
-file_no_right:
-					touch filenr
-					chmod 000 filenr
-					./pipex filenr "grep a" "grep b" fileout
-					chmod 777 filenr
-					$(RM) filenr
-
-wrong_cmd:
-					./pipex file1 "cmd1" "grep b" fileout
-					./pipex file1 "grep a" "cmd2" fileout
-					./pipex file1 "grep a" "grep b" "cmd3" fileout
-
-p_test:				args_test empty_pipe file_not_exist file_no_right wrong_cmd
-
-#--------------------
-
-val1:
-					cat file1
-					$(VALG_LEAK) ./pipex file1 "grep file" "grep 2" "grep a" file99
-					cat file99
-					$(RM) file99
-
-leak:
-					$(LEAK_CMD) ./pipex file1 "grep file" "grep 2" "grep a" file99
-
-lldb:
-					lldb ./pipex file1 "grep file" "grep 2" file99
 
 
 #PHONY--------------------------------------------------------------------------

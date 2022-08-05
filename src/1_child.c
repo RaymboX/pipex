@@ -6,11 +6,36 @@
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 12:29:25 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/04 15:27:27 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/05 15:15:00 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../header/pipex.h"
+
+int	cmd_loop(t_vars *vars, char **argv)
+{
+	int		fct_ret;
+	char	buf;
+
+	fct_ret = pipe(vars->fd_pipe_err);
+	if (fct_ret == -1)
+		return (PIPE_ERR);
+	vars->i_cmd = -1;
+	buf = '0';
+	vars->id = 1;
+	while (++vars->i_cmd < vars->nb_cmd && vars->id != 0
+		&& buf == '0')
+	{
+		fct_ret = fork_exec(vars, argv[vars->i_cmd + 2]);
+		if (vars->id != 0 && fct_ret == 0)
+			read(vars->fd_pipe_err[0], &buf, 1);
+	}
+	if (vars->id == 0)
+		return (CHILD_RUNAWAY);
+	if (buf != '0')
+		return (EXECVE_FAIL);
+	return (fct_ret);
+}
 
 int	fork_exec(t_vars *vars, char *args)
 {
@@ -28,12 +53,8 @@ int	fork_exec(t_vars *vars, char *args)
 	}
 	vars->id = fork();
 	if (vars->id == 0)
-	{
 		child_exec(vars, args);
-		return (1);
-	}
 	wait(0);
-	printf("not waiting anymore\n");
 	close(vars->fd_pipe[1]);
 	close(vars->fd_receiver);
 	write(vars->fd_pipe_err[1], "0", 1);
@@ -47,23 +68,34 @@ void	child_exec(t_vars *vars, char *args)
 
 	exec_args = NULL;
 	path = NULL;
-	//close(vars->fd_pipe[0]);
-	//close(vars->fd_pipe_err[0]);
 	exec_args = args_parcing(args, exec_args);
-	path = find_file(vars->cmd_path, exec_args[0]);
-	printf("path=%s cmd=%s\n", path, exec_args[0]);
+	if (access(exec_args[0], F_OK) == 0)
+		local_cmd_parcing(&path, &exec_args[0]);
+	else
+		path = find_file(vars->cmd_path, exec_args[0]);
 	if (path)
 	{
 		dup2(vars->fd_giver, 0);
 		dup2(vars->fd_receiver, 1);
-		execve(path, exec_args, NULL);
+		execve(path, exec_args, vars->envp);
 	}
-	//close(vars->fd_giver);
-	//close(vars->fd_receiver);
 	free(path);
 	free_dbl_ptr((void **)exec_args);
 	write(vars->fd_pipe_err[1], "1", 1);
-	//close(vars->fd_pipe_err[1]);
+	close_all(vars);
+	free_dbl_ptr((void **)vars->cmd_path);
+	exit(1);
+}
+
+void	local_cmd_parcing(char **path, char **cmd)
+{
+	if (ft_strrchr_i(*cmd, '/') == -1)
+		*path = ft_strjoin("./", *cmd);
+	else
+	{
+		*path = *cmd;
+		*cmd = *path + ft_strrchr_i(*path, '/') + 1;
+	}
 }
 
 char	*find_file(char **path, char *file)
@@ -72,19 +104,6 @@ char	*find_file(char **path, char *file)
 	char	*path_cmd;
 	char	*path_slash;
 
-	if (access(file, F_OK) == 0)
-	{
-		printf("cmd local accessible\n");
-		printf("index of / =%d\n", ft_strrchr_i(file, '/'));
-		if (ft_strrchr_i(file, '/') != -1)
-		{
-			//remove./ devant file 
-			file = 
-			return (file[ft_strrchr_i(file, '/') + 1]);
-		}
-		else
-			return (ft_strjoin("./", file));
-	}
 	i = -1;
 	while (path[++i])
 	{
@@ -96,49 +115,4 @@ char	*find_file(char **path, char *file)
 		free(path_cmd);
 	}
 	return (NULL);
-}
-
-char	**args_parcing(char *args, char **exec_args)
-{
-	int	i;
-
-	in_quote_space_replace(args, 34);
-	in_quote_space_replace(args, 39);
-	exec_args = ft_split(args, ' ');
-	i = -1;
-	while (exec_args[++i])
-		put_back_space(exec_args[i]);
-	return (exec_args);
-}
-
-void	in_quote_space_replace(char *args, int quote)
-{
-	char	*ptr_quote;
-	int		i;
-
-	ptr_quote = ft_strchr(args, quote);
-	if (ptr_quote != NULL)
-	{
-		i = 1;
-		while (ptr_quote[i] && ptr_quote[i] != (char)quote)
-		{
-			if (ptr_quote[i] == ' ')
-				ptr_quote[i] = (char)TEMP_SPACE_CHAR;
-			i++;
-		}
-		if (!(ptr_quote[i]))
-			put_back_space(args);
-	}
-}
-
-void	put_back_space(char *args)
-{
-	int	i;
-
-	i = -1;
-	while (args[++i])
-	{
-		if (args[i] == (char)TEMP_SPACE_CHAR)
-			args[i] = ' ';
-	}
 }
