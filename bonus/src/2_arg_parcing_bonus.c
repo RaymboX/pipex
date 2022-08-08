@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   2_arg_parcing.c                                    :+:      :+:    :+:   */
+/*   2_arg_parcing_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 15:10:15 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/05 15:20:57 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/08 09:30:16 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "../header/pipex_bonus.h"
 
 char	**args_parcing(char *args, char **exec_args)
 {

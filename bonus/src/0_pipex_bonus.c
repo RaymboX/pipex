@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   0_pipex.c                                          :+:      :+:    :+:   */
+/*   0_pipex_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 12:27:59 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/05 15:17:30 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/08 09:30:06 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "../header/pipex_bonus.h"
 
 int	main(int argc, char **argv, char **envp)
 {

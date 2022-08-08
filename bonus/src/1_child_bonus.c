@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   1_child.c                                          :+:      :+:    :+:   */
+/*   1_child_bonus.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 12:29:25 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/05 15:15:00 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/08 09:30:13 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../header/pipex.h"
+#include "../header/pipex_bonus.h"
 
 int	cmd_loop(t_vars *vars, char **argv)
 {

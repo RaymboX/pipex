@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pipex.h                                            :+:      :+:    :+:   */
+/*   pipex_bonus.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:54:33 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/08 09:29:50 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/08 09:32:32 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef PIPEX_BONUS_H
+# define PIPEX_BONUS_H
 
 # ifdef __linux__
 #  include <sys/errno.h>
@@ -24,7 +24,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <errno.h>
-# include "../libft/libft.h"
+# include "../../libft/libft.h"
 
 enum e_error
 {
@@ -60,20 +60,20 @@ typedef struct s_vars
 	char	**envp;
 }				t_vars;
 
-//0_pipex.c
+//0_pipex_bonus.c
 int		pathfinder(t_vars *vars, char **envp);
 int		open_file(t_vars *vars, int argc, char **argv);
 void	close_all(t_vars *vars);
 int		error_message(t_vars *vars, int argc, char **argv, int error);
 
-//1_child.c
+//1_child_bonus.c
 int		cmd_loop(t_vars *vars, char **argv);
 int		fork_exec(t_vars *vars, char *args);
 void	child_exec(t_vars *vars, char *args);
 void	local_cmd_parcing(char **path, char **cmd);
 char	*find_file(char **path, char *file);
 
-//2_arg_parcing.c
+//2_arg_parcing_bonus.c
 char	**args_parcing(char *args, char **exec_args);
 char	*remove_backslash_in_quote(char *arg);
 char	*remove_outside_quote(char *arg);
