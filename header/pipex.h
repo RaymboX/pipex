@@ -6,7 +6,7 @@
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/01 13:54:33 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/08 09:29:50 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/09 13:58:52 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <errno.h>
-# include "../libft/libft.h"
+# include "../libft/header/libft.h"
 
 enum e_error
 {

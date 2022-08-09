@@ -75,25 +75,29 @@ ifeq ($(UNAME_S),Linux)
 else
 					@$(CC) $(CFLAGS) $(LIBFT) -o $(NAME) $(OBJS)
 endif
-					@echo "$G$(NAME) compiled$W"
+					@echo "$G$(NAME)         compiled$W"
 					
 $(LIBFT):
 					@cd $(LIBFT_DIR)/ && make
 					
 
 clean:
+ifneq ($(wildcard $(OBJS_DIR)),)					
 					@$(MAKE) -s clean -C $(LIBFT_DIR)
 					@$(RM) $(OBJS)
 					@$(RM) $(OBJS_DIR)
 					@$(RM) $(OBJS_BONUS)
 					@$(RM) $(OBJS_DIR_BONUS)
-					@echo "$RAll objects deleted$W"
+					@echo "$Rpipex objects deleted$W"
+endif
 
 fclean: 			clean
+ifneq ($(wildcard $(NAME)),)					
 					@$(MAKE) -s fclean -C $(LIBFT_DIR)
 					@$(RM) $(NAME)
 					@$(RM) $(NAME_BONUS)
-					@echo "$R$(NAME) deleted$W"
+					@echo "$R$(NAME)         deleted$W"
+endif
 	
 re: 				fclean all
 
