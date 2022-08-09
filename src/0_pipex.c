@@ -6,7 +6,7 @@
 /*   By: mraymond <mraymond@student.42quebec.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 12:27:59 by mraymond          #+#    #+#             */
-/*   Updated: 2022/08/08 09:43:17 by mraymond         ###   ########.fr       */
+/*   Updated: 2022/08/09 08:48:39 by mraymond         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	main(int argc, char **argv, char **envp)
 	t_vars	vars;
 	int		fct_ret;
 
-	if (argc < 5)
+	if (argc != 5)
 		return (error_message(&vars, argc, argv, ARG_INSUF));
 	if (pathfinder(&vars, envp) == ENVP_PATH)
 		return (error_message(&vars, argc, argv, ENVP_PATH));
